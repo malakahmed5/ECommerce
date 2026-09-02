@@ -1,5 +1,6 @@
 ﻿using ECommerce.Domain.Contracts;
 using ECommerce.Domain.Entities;
+using ECommerce.Domain.Entities.OrderModuleEntities;
 using ECommerce.Domain.Entities.ProductModuleEntities;
 using ECommerce.Persistence.Data.Contetxts;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,9 @@ namespace ECommerce.Persistence.DataSeed
             var hasProduct = await _dbContext.Products.AnyAsync();
             var hasBrands = await _dbContext.ProductBrands.AnyAsync();
             var hasTypes = await _dbContext.ProductTypes.AnyAsync();
-            if (hasProduct && hasBrands && hasTypes) return;
+            var hasDeliveryMethods = await _dbContext.DeliveryMethods.AnyAsync();
+
+            if (hasProduct && hasBrands && hasTypes && hasDeliveryMethods) return;
 
             if (!hasBrands)
                 await SeedData<int, ProductBrand>(_dbContext.ProductBrands, "brands.Json");
@@ -34,10 +37,12 @@ namespace ECommerce.Persistence.DataSeed
             await _dbContext.SaveChangesAsync();
 
             if (!hasProduct)
-            {
                 await SeedData<int, Product>(_dbContext.Products, "products.Json");
-                await _dbContext.SaveChangesAsync();
-            }
+
+            if(!hasDeliveryMethods)
+                await SeedData<int, DeliveryMethod>(_dbContext.DeliveryMethods, "delivery.json");
+
+            await _dbContext.SaveChangesAsync();
         }
 
         #region Helper Methods 
