@@ -26,9 +26,10 @@ namespace ECommerce.Persistence.SystemData.Configurations.OrderModuleConfigurati
             builder.Property(x => x.DeliveryTime)
                 .HasMaxLength(50);
 
-            builder.HasOne<Order>()
-                .WithOne(o => o.DeliveryMethod)
-                .HasForeignKey<Order>(o => o.DeliveryMethodId);
+            builder.HasMany<Order>()
+                .WithOne(o => o.DeliveryMethod) 
+                .HasForeignKey(o => o.DeliveryMethodId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

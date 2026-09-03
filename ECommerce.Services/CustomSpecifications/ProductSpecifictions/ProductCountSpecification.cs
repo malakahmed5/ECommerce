@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECommerce.Services.ProductSpecifictions
+namespace ECommerce.Services.CustomSpecifications.ProductSpecifictions
 {
     internal class ProductCountSpecification:BaseSpecifications<int , Product>
     {

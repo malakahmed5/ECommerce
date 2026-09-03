@@ -2,8 +2,7 @@
 using ECommerce.Domain.Contracts;
 using ECommerce.Domain.Entities.ProductModuleEntities;
 using ECommerce.Services.Abstraction;
-using ECommerce.Services.Exceptions;
-using ECommerce.Services.ProductSpecifictions;
+using ECommerce.Services.CustomSpecifications.ProductSpecifictions;
 using ECommerce.Shared;
 using ECommerce.Shared.CommonResponses;
 using ECommerce.Shared.DTOs;

@@ -14,8 +14,8 @@ namespace ECommerce.Domain.Entities.OrderModuleEntities
         public OrderAddress Address { get; set; } = default!;
         public DeliveryMethod DeliveryMethod { get; set; } = default!;
         public int DeliveryMethodId { get; set; }
-        public ICollection<OrderItem> OrderItems { get; set; } = [];
-        public decimal SubTotal { get; set; }
+        public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>(); // = BasketItem
+        public decimal SubTotal { get; set; } // = basketItems.Sum(item => item.Price * item.Quantity);
         public decimal GetTotal() => SubTotal + DeliveryMethod.Price;
     }
 }

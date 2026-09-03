@@ -108,6 +108,7 @@ namespace ECommerce.API
             });
 
             builder.Services.AddScoped<IIdentityAddressRepository, IdentityAddressRepository>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
             #endregion
 
             var app = builder.Build();

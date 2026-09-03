@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Persistence.Migrations
 {
     [DbContext(typeof(StoreDbContext))]
-    [Migration("20260902203342_OrderModuleCreateAndSeed")]
+    [Migration("20260903025225_OrderModuleCreateAndSeed")]
     partial class OrderModuleCreateAndSeed
     {
         /// <inheritdoc />
@@ -88,8 +88,7 @@ namespace ECommerce.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DeliveryMethodId")
-                        .IsUnique();
+                    b.HasIndex("DeliveryMethodId");
 
                     b.ToTable("Orders");
                 });
@@ -227,9 +226,9 @@ namespace ECommerce.Persistence.Migrations
             modelBuilder.Entity("ECommerce.Domain.Entities.OrderModuleEntities.Order", b =>
                 {
                     b.HasOne("ECommerce.Domain.Entities.OrderModuleEntities.DeliveryMethod", "DeliveryMethod")
-                        .WithOne()
-                        .HasForeignKey("ECommerce.Domain.Entities.OrderModuleEntities.Order", "DeliveryMethodId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany()
+                        .HasForeignKey("DeliveryMethodId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.OwnsOne("ECommerce.Domain.Entities.OrderModuleEntities.OrderAddress", "Address", b1 =>
@@ -284,7 +283,7 @@ namespace ECommerce.Persistence.Migrations
             modelBuilder.Entity("ECommerce.Domain.Entities.OrderModuleEntities.OrderItem", b =>
                 {
                     b.HasOne("ECommerce.Domain.Entities.OrderModuleEntities.Order", null)
-                        .WithMany("OrderItems")
+                        .WithMany("Items")
                         .HasForeignKey("OrderId");
 
                     b.OwnsOne("ECommerce.Domain.Entities.OrderModuleEntities.ProductItemOrdered", "Product", b1 =>
@@ -341,7 +340,7 @@ namespace ECommerce.Persistence.Migrations
 
             modelBuilder.Entity("ECommerce.Domain.Entities.OrderModuleEntities.Order", b =>
                 {
-                    b.Navigation("OrderItems");
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

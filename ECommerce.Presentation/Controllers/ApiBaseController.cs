@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,6 +15,7 @@ namespace ECommerce.Presentation.Controllers
     [Route("api/[Controller]")]
     public class ApiBaseController:ControllerBase
     {
+        protected string GetUserEmailFromToken() => User.FindFirstValue(ClaimTypes.Email)!;
 
         //Result : [Without Data]
         protected IActionResult HandleResult(Result result)

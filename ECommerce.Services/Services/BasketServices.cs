@@ -23,7 +23,7 @@ namespace ECommerce.Services.Services
             _basketRepo = basketRepo;
             _mapper = mapper;
         }
-        public async Task<CustomerBasketDTO> CreateOrUpdateBasket(CustomerBasketDTO createOrUpdatedBasket)
+        public async Task<Result<CustomerBasketDTO>> CreateOrUpdateBasket(CustomerBasketDTO createOrUpdatedBasket)
         { 
             var basketData = _mapper.Map<CustomerBasket>(createOrUpdatedBasket);
             var createdOrUpdatedBasket = await _basketRepo.CreateOrUpdateBasket(basketData);

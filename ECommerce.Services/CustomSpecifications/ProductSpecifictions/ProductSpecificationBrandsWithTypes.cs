@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECommerce.Services.ProductSpecifictions
+namespace ECommerce.Services.CustomSpecifications.ProductSpecifictions
 {
     internal class ProductSpecificationBrandsWithTypes:BaseSpecifications<int,Product>
     {

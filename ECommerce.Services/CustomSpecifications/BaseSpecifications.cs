@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECommerce.Services
+namespace ECommerce.Services.CustomSpecifications
 {
     public abstract class BaseSpecifications<TKey, TEntity> : ISpecifications<TKey, TEntity>
         where TEntity : BaseEntity<TKey>

@@ -53,7 +53,7 @@ namespace ECommerce.Persistence.Migrations
                         column: x => x.DeliveryMethodId,
                         principalTable: "DeliveryMethods",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -89,8 +89,7 @@ namespace ECommerce.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_DeliveryMethodId",
                 table: "Orders",
-                column: "DeliveryMethodId",
-                unique: true);
+                column: "DeliveryMethodId");
         }
 
         /// <inheritdoc />

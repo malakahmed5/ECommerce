@@ -11,7 +11,7 @@ namespace ECommerce.Services.Abstraction
     public interface IBasketServices
     {
         Task<Result<CustomerBasketDTO>> GetBasket(string basketId);
-        Task<CustomerBasketDTO> CreateOrUpdateBasket(CustomerBasketDTO createOrUpdatedBasket);
+        Task<Result<CustomerBasketDTO>> CreateOrUpdateBasket(CustomerBasketDTO createOrUpdatedBasket);
         Task<bool> DeleteBasket(string basketId);
 
     }
