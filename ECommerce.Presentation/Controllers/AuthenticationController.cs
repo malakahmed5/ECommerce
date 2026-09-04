@@ -1,7 +1,9 @@
 ﻿using ECommerce.Services.Abstraction;
+using ECommerce.Shared.CommonResponses;
 using ECommerce.Shared.DTOs.IdentityDTOs;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -35,13 +37,16 @@ namespace ECommerce.Presentation.Controllers
             return HandleResult(result);
         }
 
-        [HttpGet("emailExist")]
+        [HttpGet("emailExists")]
         public async Task<ActionResult<bool>> IsEmailExist(string email)
         {
             return await _authenticationService.IsEmailExistAsync(email);
         }
 
         [Authorize]
+        [ProducesResponseType<UserDTO>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+        [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
         [HttpGet("current-user")]
         public async Task<ActionResult<UserDTO>> GetCurrentUser()
         {
@@ -49,18 +54,21 @@ namespace ECommerce.Presentation.Controllers
             var result = await _authenticationService.GetCurrentUserByEmailAsync(userEmail);
             return HandleResult(result);
         }
-
-        [HttpGet("{userId}/address")]
-        public async Task<ActionResult<UserAddressDTO>> GetUserAddressDetails(string userId)
+        [Authorize]
+        [HttpGet("address")]
+        public async Task<ActionResult<UserAddressDTO>> GetUserAddress()
         {
-            var result = await _authenticationService.GetUserAddressDetailsAsync(userId);
+            var email = GetUserEmailFromToken();
+            var result = await _authenticationService.GetUserAddressAsync(email);
             return HandleResult(result);
         }
 
-        [HttpPut("{userId}/address")]
-        public async Task<IActionResult> UpdateUserAddress(string userId, UpdateUserAddressDTO userAddressDTO)
+        [Authorize]
+        [HttpPut("address")]
+        public async Task<ActionResult<UserAddressDTO>> UpdateUserAddress(UserAddressDTO userAddressDTO)
         {
-            var result = await _authenticationService.UpdateUserAddressAsync(userId, userAddressDTO);
+            var email = GetUserEmailFromToken();
+            var result = await _authenticationService.UpdateUserAddressAsync(email, userAddressDTO);
             return HandleResult(result);
         }
     }

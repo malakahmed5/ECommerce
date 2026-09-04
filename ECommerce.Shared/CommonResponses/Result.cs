@@ -29,6 +29,8 @@ namespace ECommerce.Shared.CommonResponses
         public static Result Fail(List<Error> errors) => new Result(errors);
         #endregion
 
+        public static implicit operator Result(Error error) => Result.Fail(error);
+
     }
 
     public class Result<TValue>:Result

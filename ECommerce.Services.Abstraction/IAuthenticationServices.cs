@@ -14,7 +14,7 @@ namespace ECommerce.Services.Abstraction
         Task<Result<UserDTO>> RegisterAsync(RegisterDTO  registerDTO);
         Task<bool> IsEmailExistAsync(string email);
         Task<Result<UserDTO>> GetCurrentUserByEmailAsync(string email);
-        Task<Result<UserAddressDTO>> GetUserAddressDetailsAsync(string userId);
-        Task<Result> UpdateUserAddressAsync(string userId,UpdateUserAddressDTO updateUserAddress);
+        Task<Result<UserAddressDTO>> GetUserAddressAsync(string email);
+        Task<Result<UserAddressDTO>> UpdateUserAddressAsync(string email,UserAddressDTO updateUserAddress);
     }
 }

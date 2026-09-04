@@ -27,7 +27,7 @@ namespace ECommerce.Presentation.Controllers
             _productServices = productServices;
         }
 
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize]
         [HttpGet]
         [RedisCache(5)]
         public async Task<ActionResult<PaginatedResult<ProductDTO>>> GetAllProducts([FromQuery] ProductQueryParams queryParams)

@@ -13,9 +13,8 @@ namespace ECommerce.Services.MappingProfiles.IdentityMappingProfile
     {
         public UserAddressMappingProfile()
         {
-            CreateMap<Address, UserAddressDTO>();
-            CreateMap<UpdateUserAddressDTO, Address>()
-            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Address, UserAddressDTO>().ReverseMap();
+        
         }
     }
 }

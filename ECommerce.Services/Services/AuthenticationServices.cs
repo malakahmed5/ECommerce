@@ -27,17 +27,14 @@ public class AuthenticationServices : IAuthenticationServices
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IConfiguration _configuration;
-    private readonly IIdentityAddressRepository _addressRepository;
     private readonly IMapper _mapper;
 
     public AuthenticationServices(
         UserManager<ApplicationUser> userManager, 
-        IConfiguration configuration , IIdentityAddressRepository addressRepository, 
-        IMapper mapper)
+        IConfiguration configuration,IMapper mapper)
     {
         _userManager = userManager;
         _configuration = configuration;
-        _addressRepository = addressRepository;
         _mapper = mapper;
     }
 
@@ -91,31 +88,41 @@ public class AuthenticationServices : IAuthenticationServices
         return user is not null;
     }
 
-    public async Task<Result<UserAddressDTO>> GetUserAddressDetailsAsync(string userId)
+    public async Task<Result<UserAddressDTO>> GetUserAddressAsync(string email)
     {
-        var addresses = await _addressRepository.GetAllAsync(q => q.Where(x => x.UserId == userId));
-        var address = addresses.FirstOrDefault();
-        if (address is null)
-            return Error.NotFound("UserAddress.NotFound", $"There's No Address For This User Id = '{userId}'");
+        var user = await _userManager.Users.Include(u => u.Address).FirstOrDefaultAsync(u => u.Email == email);
+        if (user is null)
+            return Error.NotFound("User.NotFound", $"User With This Email '{email}' Is Not Found");
 
-        return _mapper.Map<UserAddressDTO>(address);
+        if(user.Address is null)
+            return Error.NotFound("UserAddress.NotFound", $"User With This Email '{email}' Has No Address");
+
+        return _mapper.Map<UserAddressDTO>(user.Address);
+
     }
 
-    public async Task<Result> UpdateUserAddressAsync(string userId, UpdateUserAddressDTO updateUserAddress)
+    public async Task<Result<UserAddressDTO>> UpdateUserAddressAsync(string email, UserAddressDTO updateUserAddress)
     {
-        var addresses = await _addressRepository.GetAllAsync(q => q.Where(x => x.UserId == userId));
-        var address = addresses.FirstOrDefault();
-        if (address is null)
-            return Result.Fail(Error.NotFound("UserAddress.NotFound", $"There's No Address For This User Id = '{userId}'"));
+        var user = await _userManager.Users.Include(u => u.Address).FirstOrDefaultAsync(u => u.Email == email);
+        if (user is null)
+            return Error.NotFound("User.NotFound", $"User With This Email '{email}' Is Not Found");
+        if(user.Address is null)
+            return Error.NotFound("UserAddress.NotFound", $"User With This Email '{email}' Has No Address");
 
-        _mapper.Map(updateUserAddress, address);
+        user.Address.FristName = updateUserAddress.FristName;
+        user.Address.LastName = updateUserAddress.LastName;
+        user.Address.Country = updateUserAddress.Country;
+        user.Address.City = updateUserAddress.City;
+        user.Address.Street = updateUserAddress.Street;
 
-        _addressRepository.Update(address);
-        await _addressRepository.SaveChangesAsync();
+        var result = await _userManager.UpdateAsync(user);
 
-        return Result.Ok();
+        if(!result.Succeeded)
+            return result.Errors.Select(e => Error.Validation(e.Code, e.Description)).ToList();
 
+        return _mapper.Map<UserAddressDTO>(user.Address);
     }
+
 
 
     #region Helper Method

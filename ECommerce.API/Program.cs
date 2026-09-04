@@ -22,8 +22,11 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using StackExchange.Redis;
+using Swashbuckle.AspNetCore.Filters;
+using Swashbuckle.AspNetCore.SwaggerUI;
 using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,7 +45,36 @@ namespace ECommerce.API
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "ECommerce.API",
+                    Version = "v1"
+                });
+
+                // 1. Define the Security Scheme for the filter
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+                // 2. Apply security ONLY to endpoints with [Authorize]
+                options.OperationFilter<SecurityRequirementsOperationFilter>();
+            });
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("DevelopmentPolicy", policy =>
+                {
+                    policy.AllowAnyHeader()
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod();
+
+                });
+            });
 
             builder.Services.AddDbContext<StoreDbContext>(options =>
             {
@@ -83,11 +115,13 @@ namespace ECommerce.API
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
             });
+
             builder.Services.AddIdentityCore<ApplicationUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<StoreIdentityDbContext>();
 
             builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
+
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -107,7 +141,6 @@ namespace ECommerce.API
                 };
             });
 
-            builder.Services.AddScoped<IIdentityAddressRepository, IdentityAddressRepository>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             #endregion
 
@@ -122,19 +155,22 @@ namespace ECommerce.API
 
 
             #region Piplines [MiddelWares]
-            //app.   [Show All Built In Middle Ware]
-            //app.Use(async (context,next) => ) [Use Method => Used To Writte Custome Logic Not Custom Middle ware ]
-            //app.UseMiddleware<>(); => [To Call Custom Middle Ware ]
             app.UseMiddleware<ExceptionHandlerMiddelware>();
 
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(options =>
+                {
+                    options.DisplayRequestDuration();
+                    options.EnableFilter();
+                    //options.DocExpansion(DocExpansion.None);
+                });
             }
 
             app.UseStaticFiles();
             app.UseHttpsRedirection();
+            app.UseCors("DevelopmentPolicy");
 
             app.UseAuthentication();
             app.UseAuthorization();
