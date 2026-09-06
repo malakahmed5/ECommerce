@@ -109,7 +109,7 @@ public class AuthenticationServices : IAuthenticationServices
         if(user.Address is null)
             return Error.NotFound("UserAddress.NotFound", $"User With This Email '{email}' Has No Address");
 
-        user.Address.FristName = updateUserAddress.FristName;
+        user.Address.FirstName = updateUserAddress.FirstName;
         user.Address.LastName = updateUserAddress.LastName;
         user.Address.Country = updateUserAddress.Country;
         user.Address.City = updateUserAddress.City;

@@ -33,8 +33,8 @@ namespace ECommerce.Presentation.Controllers
             return HandleResult(result);
         }
 
-        [HttpDelete("{Id}")]
-        public async Task<ActionResult<bool>> DeleteBasket([FromRoute]string Id)
+        [HttpDelete]
+        public async Task<ActionResult<bool>> DeleteBasket(string Id)
         {
             var result = await _basketServices.DeleteBasket(Id);
             return result;

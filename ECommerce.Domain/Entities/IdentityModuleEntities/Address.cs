@@ -3,7 +3,7 @@
     public class Address
     {
         public int Id { get; set; }
-        public string FristName { get; set; } = default!;
+        public string FirstName { get; set; } = default!;
         public string LastName { get; set; } = default!;
         public string Country { get; set; } = default!;
         public string City { get; set; } = default!;

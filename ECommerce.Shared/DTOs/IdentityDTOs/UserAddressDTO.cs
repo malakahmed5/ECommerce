@@ -10,7 +10,7 @@ namespace ECommerce.Shared.DTOs.IdentityDTOs
     public class UserAddressDTO
     {
         [StringLength(50, MinimumLength = 2, ErrorMessage = "First name must be between 2 and 50 characters.")]
-        public string FristName { get; set; } = default!;
+        public string FirstName { get; set; } = default!;
 
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Last name must be between 2 and 50 characters.")]
         public string LastName { get; set; }

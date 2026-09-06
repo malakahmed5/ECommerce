@@ -47,7 +47,7 @@ namespace ECommerce.Presentation.Controllers
         [ProducesResponseType<UserDTO>(StatusCodes.Status200OK)]
         [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
         [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
-        [HttpGet("current-user")]
+        [HttpGet("/api/users")]
         public async Task<ActionResult<UserDTO>> GetCurrentUser()
         {
             var userEmail = User.FindFirstValue(ClaimTypes.Email);
